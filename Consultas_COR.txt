@@ -1,0 +1,58 @@
+   
+   /*Mostrar el histórico de misiones de los soldados por año. En una columna debe aparecer el año, 
+   en otra columna debe aparecer la duración en meses de la misión, en otra columna la 
+   cantidad de soldados que participaron, en otra columna el líder de escuadrón.*/
+   
+ Select DATEDIFF (MM ,misiones.fecha_inicio_misi,misiones.fecha_final_misi) as Duracion_meses,
+	year (misiones.fecha_final_misi) as fecha,
+	misiones.lider_g_mision as lider_mision,
+  count(line_misiones.id_grupo) as Soldados_participantes
+   from misiones
+   inner join line_misiones on  misiones.id_grupo=line_misiones.id_grupo
+   group by misiones.fecha_inicio_misi,misiones.fecha_final_misi,misiones.lider_g_mision
+
+
+/*Mostrar histórico de castigo de todos los soldados. En una columna debe aparecer la descripción del tipo 
+   de castigo, en otra columna cuantos soldados han sido castigados por ese motivo, en otra columna cuantos 
+   superiores han emitido ese castigos, en otra columna el número total de días cumplido en sumatoria por todos 
+   los castigados.*/
+   
+
+ select castigos.descrip_castigo as Tipo_de_castigo, 
+   count (castigos.id_soldado) as Numero_soldados_castigado,
+   count (castigos.MIL_ID_SOLDADO) as Numeros_superiores,
+   DATEDIFF ( DD, castigos.fecha_i_castigo,castigos.fecha_f_castigo) as Duracion_total
+   from castigos
+    group by descrip_castigo,DATEDIFF ( DD, castigos.fecha_i_castigo,castigos.fecha_f_castigo)
+
+
+  /*Mostrar histórico de admisiones. En una columna debe aparecer la fecha de la admisión, en otra columna el 
+  número de postulantes que fueron admitidos, en otra columna el número de postulantes que fueron rechazados.*/
+   
+Select year (admision_ejercito.fecha_admis) as Fecha_admision ,
+   (select count (id_admision)from admision_ejercito Where estado_admis='Admitido') as Numero_admitidos,
+   (select count (id_admision)from admision_ejercito Where estado_admis='Rechazados') as Numero_rechazados
+   from admision_ejercito 
+   group by year (admision_ejercito.fecha_admis)
+
+   
+   /*Mostrar el histórico de salida de soldados. En una columna debe aparecer el año, en otra columna cuantas salidas 
+   por renuncia hubo, en otra columna cuantas salidas por jubilación hubo, en otra columna cuantas salidas por motivos 
+   vergonzoso hubo, en otra columna el número total de juntas de superiores formadas para todos los tipos de salida.*/
+   
+  Select year (salidas.fecha_salida) as Fecha_retiro,
+	(select count (id_soldado)from salidas Where descrip_salida='Jubilacion') as Numero_jubilados,
+   	(select count (id_soldado)from salidas Where descrip_salida='Renuncia') as Numero_renuncia,
+	(select count (id_soldado)from salidas Where descrip_salida='Motivos Vergonzosos') as Numero_motivos_vergonsozos,
+	(select count (id_soldado)from salidas Where investigacion_sali='Junta Formada') as Numero_Juntas_formadas
+	from salidas
+	group by year (salidas.fecha_salida)
+	
+   
+   
+   
+   
+   
+   
+   
+   

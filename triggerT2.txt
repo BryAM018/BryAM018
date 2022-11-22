@@ -1,0 +1,24 @@
+CREATE trigger tr_control
+on salidas for insert
+as
+begin
+	declare
+	@cuando integer=(select count(line_misiones.id_soldado) from inserted
+	inner join line_misiones on line_misiones.id_soldado = inserted.id_soldado)
+	if (@cuando>=1)
+	 begin
+	 PRINT('Los documentos no pueden modificarse')
+    rollback transaction
+     end
+end
+
+--------------------------------------------------------
+INSERT INTO SALIDAS(
+	id_DSALIDA, id_SOLDADO, DESCRIP_SALIDA, fecha_SALIDA, investigacion_SALI)
+	VALUES 
+	(14, 28, 'Jubilacion', '07/11/2020', 'Junta Formada');
+	 
+INSERT INTO SALIDAS(
+	id_DSALIDA, id_SOLDADO, DESCRIP_SALIDA, fecha_SALIDA, investigacion_SALI)
+	VALUES 
+	(13, 8, 'Jubilacion', '07/11/2020', 'Junta Formada');

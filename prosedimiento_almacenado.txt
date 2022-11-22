@@ -1,0 +1,17 @@
+create procedure spbusca_batallon
+(
+@actividad varchar(50)
+) 
+as
+begin
+	select BATALLONES.alias_batallon, ASPIRANTES.NOMBRE_ASPIRANTE,ASPIRANTES.APELLIDO_ASPIRANTE
+	from BATALLONES
+	inner join MILITARES on MILITARES.id_batallon = BATALLONES.id_batallon
+	inner join line_misiones on MILITARES.ID_SOLDADO = line_misiones.ID_SOLDADO
+	inner join admision_ejercito on admision_ejercito.id_admision = MILITARES.id_admision
+	inner join ASPIRANTES on ASPIRANTES.id_aspirante = admision_ejercito.ID_ASPIRANTE
+	where BATALLONES.alias_batallon = @actividad;
+	end
+
+
+execute spbusca_batallon 'Perro'
